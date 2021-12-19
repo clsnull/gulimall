@@ -1,14 +1,11 @@
 package com.clsnull.gulimall.product.controller;
 
 import java.util.Arrays;
+import java.util.List;
 import java.util.Map;
 
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.web.bind.annotation.PathVariable;
-import org.springframework.web.bind.annotation.RequestBody;
-import org.springframework.web.bind.annotation.RequestMapping;
-import org.springframework.web.bind.annotation.RequestParam;
-import org.springframework.web.bind.annotation.RestController;
+import org.springframework.web.bind.annotation.*;
 
 import com.clsnull.gulimall.product.entity.CategoryEntity;
 import com.clsnull.gulimall.product.service.CategoryService;
@@ -40,6 +37,16 @@ public class CategoryController {
         return R.ok().put("page", page);
     }
 
+    /**
+     * 列表
+     */
+    @GetMapping("/list/tree")
+    public R tree(){
+        List<CategoryEntity> listTree = categoryService.getListTree();
+
+        return R.ok().put("data", listTree);
+    }
+
 
     /**
      * 信息
@@ -64,6 +71,16 @@ public class CategoryController {
     /**
      * 修改
      */
+    @RequestMapping("/update/sort")
+    public R updateSort(@RequestBody CategoryEntity[] category){
+        categoryService.updateBatchById(Arrays.asList(category));
+
+        return R.ok();
+    }
+
+    /**
+     * 修改
+     */
     @RequestMapping("/update")
     public R update(@RequestBody CategoryEntity category){
 		categoryService.updateById(category);
@@ -76,8 +93,9 @@ public class CategoryController {
      */
     @RequestMapping("/delete")
     public R delete(@RequestBody Long[] catIds){
-		categoryService.removeByIds(Arrays.asList(catIds));
+//		categoryService.removeByIds(Arrays.asList(catIds));
 
+        categoryService.removeCategoryByIds(Arrays.asList(catIds));
         return R.ok();
     }
 
